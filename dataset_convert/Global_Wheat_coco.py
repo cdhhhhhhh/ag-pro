@@ -35,8 +35,9 @@ def convert_coco(images_dir,label_csv,label_output):
         for idx,boxx in enumerate(BoxesString_list):
             
             x_min, y_min, x_max, y_max = boxx
-            w_bbox = x_min - x_max
+            w_bbox = x_max - x_min
             h_bbox = y_max - y_min
+            
             annotations.append(dict(
                 image_id=i,
                 id=ann_count,
