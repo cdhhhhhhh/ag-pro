@@ -1,11 +1,13 @@
 
 task_array=(
-    "/home/neau/sdb/ag-pro/leaf-model/config/yolov5/yolov5_l-p6.py" 
-    "/home/neau/sdb/ag-pro/leaf-model/config/yolov5/yolov5_l.py"
-    "/home/neau/sdb/ag-pro/leaf-model/config/yolov5/yolov5_x.py"
-    "/home/neau/sdb/ag-pro/leaf-model/config/yolov5/yolov5_x-p6.py" 
-    # "/home/neau/sdb/ag-pro/leaf-model/config/yolov8/yolov8_x_mask-refine_syncbn_fast_8xb16-500e_coco.py"
-    # "/home/neau/sdb/ag-pro/leaf-model/config/yolov8/yolov8_x_syncbn_fast_8xb16-500e_coco.py"
+    "/home/neau/sdb/ag-pro/leaf-model/config/yolov5/yolov5-l-p6.py" 
+    "/home/neau/sdb/ag-pro/leaf-model/config/yolov5/yolov5-l.py"
+    "/home/neau/sdb/ag-pro/leaf-model/config/yolov5/yolov5-x.py"
+    "/home/neau/sdb/ag-pro/leaf-model/config/yolov5/yolov5-x-p6.py" 
+    # "/home/neau/sdb/ag-pro/leaf-model/config/yolov8/yolov8-x.py"
+    "/home/neau/sdb/ag-pro/leaf-model/config/yolov8/yolov8-l.py"
+    "/home/neau/sdb/ag-pro/leaf-model/config/yolov8/yolov8-s.py"
+    "/home/neau/sdb/ag-pro/leaf-model/config/yolov8/yolov8-m.py"
     )
 
 

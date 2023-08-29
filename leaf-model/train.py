@@ -107,7 +107,13 @@ def main():
     is_metainfo_lower(cfg)
 
 
-    # 增加公共配置部分
+    
+    project_name = osp.basename(cfg.filename)[:-3]
+
+    # 对add_config 进行合并配置
+
+    config_2 = Config.fromfile(cfg.add_config)
+    cfg.merge_from_dict(config_2.to_dict())
     
     # 训练数据集和验证数据集
     data_root = '/home/neau/trainset/leafs'
@@ -126,14 +132,16 @@ def main():
     cfg.test_dataloader = cfg.val_dataloader
     
     cfg.val_evaluator.ann_file = data_root + '/val_annotations.json'
-
     cfg.test_evaluator = cfg.val_evaluator
     
     ## coco设定
+    
     cfg.val_evaluator.proposal_nums = (1000, 1, 10)
     cfg.model.test_cfg.nms.iou_threshold = 0.6
-
     
+    # wandb可视化项目名字
+    
+    cfg.visualizer.vis_backends[1].init_kwargs['name'] = cfg.project_name
     
     # build the runner from config
     if 'runner_type' not in cfg:
