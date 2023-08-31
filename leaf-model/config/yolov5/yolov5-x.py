@@ -11,8 +11,9 @@ project_name = 'yolov5-x'
 train_batch_size_per_gpu = 2
 
 model = dict(
+        bbox_head=dict(
     loss_cls=dict(loss_weight= 0.3 *
-        (2 / 80 * 3 / 3)),  
+        (2 / 80 * 3 / 3)),  )
 )
 
 

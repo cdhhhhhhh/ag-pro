@@ -5,7 +5,7 @@ _base_ = [
 add_config = '/home/neau/sdb/ag-pro/leaf-model/config/yolov8/base.py'
 
 project_name = 'yolov8-s'
-train_batch_size_per_gpu = 2
+train_batch_size_per_gpu = 4
 
 
 

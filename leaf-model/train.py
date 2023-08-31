@@ -107,14 +107,17 @@ def main():
     is_metainfo_lower(cfg)
 
 
-    
-    project_name = osp.basename(cfg.filename)[:-3]
-
     # 对add_config 进行合并配置
 
-    config_2 = Config.fromfile(cfg.add_config)
-    cfg.merge_from_dict(config_2.to_dict())
-    
+    if type(cfg.add_config) == str:     
+        
+        config_2 = Config.fromfile(cfg.add_config)
+        cfg.merge_from_dict(config_2.to_dict())
+    else:
+        
+        for config_item in cfg.add_config:
+            config_2 = Config.fromfile(config_item)
+            cfg.merge_from_dict(config_2.to_dict())
     # 训练数据集和验证数据集
     data_root = '/home/neau/trainset/leafs'
     metainfo = dict(classes=('round','sharp'))
@@ -140,9 +143,13 @@ def main():
     cfg.model.test_cfg.nms.iou_threshold = 0.6
     
     # wandb可视化项目名字
-    
-    cfg.visualizer.vis_backends[1].init_kwargs['name'] = cfg.project_name
-    
+    if hasattr(cfg,'project_name'):
+        project_name = cfg.project_name
+    else:
+        project_name = osp.basename(cfg.filename)[:-3]
+
+    cfg.visualizer.vis_backends[1].init_kwargs['name'] = project_name
+
     # build the runner from config
     if 'runner_type' not in cfg:
         # build the default runner
