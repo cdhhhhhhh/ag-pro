@@ -3,6 +3,7 @@ import argparse
 import logging
 import os
 import os.path as osp
+import importlib
 
 from mmdet.utils import setup_cache_size_limit_of_dynamo
 from mmengine.config import Config, DictAction
@@ -11,6 +12,9 @@ from mmengine.runner import Runner
 
 from mmyolo.registry import RUNNERS
 from mmyolo.utils import is_metainfo_lower
+
+
+
 
 
 def parse_args():
@@ -108,7 +112,9 @@ def main():
 
 
     # 对add_config 进行合并配置
-
+    base_config = Config.fromfile('/home/neau/sdb/ag-pro/leaf-model/config/base_config.py') 
+    cfg.merge_from_dict(base_config.to_dict())
+    
     if type(cfg.add_config) == str:     
         
         config_2 = Config.fromfile(cfg.add_config)
@@ -139,8 +145,21 @@ def main():
     
     ## coco设定
     
-    cfg.val_evaluator.proposal_nums = (1000, 1, 10)
-    cfg.model.test_cfg.nms.iou_threshold = 0.6
+    cfg.val_evaluator.proposal_nums = (100, 300, 1000)
+    # cfg.model.test_cfg.nms.iou_threshold = 0.65
+    
+
+
+    cfg.custom_imports = dict(
+        imports=['lib.hooks'],
+        allow_failed_imports=False)
+
+
+    cfg.custom_hooks = [
+        dict(type='MySelfExpHook', interval=50)
+    ]
+
+
     
     # wandb可视化项目名字
     if hasattr(cfg,'project_name'):

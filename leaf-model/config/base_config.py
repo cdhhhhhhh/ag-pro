@@ -1,7 +1,8 @@
+custom_imports = dict(
+    imports=['lib.hooks'],
+    allow_failed_imports=False)
 
 
-
-num_classes = 2
-max_epochs = 500
-train_batch_size_per_gpu = 2
-train_num_workers = 1
+custom_hooks = [
+    dict(type='MySelfExpHook', interval=50)
+]
