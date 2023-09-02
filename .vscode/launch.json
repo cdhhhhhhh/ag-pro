@@ -10,7 +10,9 @@
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
-            "justMyCode": true
+            "justMyCode": true,
+            "cwd": "/home/neau/sdb/ag-pro/leaf-model",
+            "args": ["/home/neau/sdb/ag-pro/leaf-model/config/yolov5/yolov5-l.py"]
         }
     ]
 }

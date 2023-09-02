@@ -150,13 +150,13 @@ def main():
     
 
 
+    # 加入公共模块
+    
     cfg.custom_imports = dict(
         imports=['lib.hooks'],
         allow_failed_imports=False)
-
-
     cfg.custom_hooks = [
-        dict(type='MySelfExpHook', interval=50)
+        dict(type='MySelfExpHook')
     ]
 
 
