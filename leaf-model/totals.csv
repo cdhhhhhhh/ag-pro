@@ -1,2 +1,3 @@
 name,epoch,val/coco/bbox_mAP,val/coco/bbox_mAP_50,val/coco/bbox_mAP_75,val/coco/bbox_mAP_s,val/coco/bbox_mAP_m,val/coco/bbox_mAP_l,val/coco/recall,val/coco/round_iou0.5_ap,val/coco/round_iou0.5_recall,val/coco/sharp_iou0.5_ap,val/coco/sharp_iou0.5_recall,gpu
-yolov5-l,10,0.005,0.029,0,0,0.007,0,0.18,0.044,0.206,0.013,0.155,1.213
+0,0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+yolov8-s-test,1111,0.183,0.564,0.133,0.079,0.249,0.305,0.742,0.677,0.88,0.452,0.605,0.978
