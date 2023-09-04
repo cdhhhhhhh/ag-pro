@@ -1,5 +1,5 @@
 # train_batch_size_per_gpu = 4
-train_num_workers = 2
+train_num_workers = 1
 
 model = dict(
     bbox_head= dict(

@@ -36,7 +36,7 @@ class MySelfExpHook(Hook):
         runner.message_hub.update_scalar('gpu', max([round(i / 11264 , 4) for i in gpus_memory]), 1)
     
     
-    def after_run(self, runner):
+    def after_train(self, runner):
         log_scalars = runner.message_hub.state_dict()['log_scalars']
         val_interval = runner.cfg.train_cfg.val_interval
         max_epochs = runner.cfg.train_cfg.max_epochs
@@ -57,18 +57,20 @@ class MySelfExpHook(Hook):
 
         
         # 最优数据
-        best_dic = val_pd[val_pd['val/coco/bbox_mAP_50'] == val_pd['val/coco/bbox_mAP_50'].max()].to_dict()
-        best_i = val_pd[val_pd['val/coco/bbox_mAP_50'] == val_pd['val/coco/bbox_mAP_50'].max()].index.values[0]
-        best_dic['gpu'] = { best_i : log_scalars['gpu'].data[0].max() }
-        best_dic['name'] = { best_i : runner.cfg.project_name }
+        best_row = val_pd[val_pd['val/coco/bbox_mAP_50'] == val_pd['val/coco/bbox_mAP_50'].max()].iloc[-1]
+        best_dic = best_row.to_dict()
+        # best_i = best_row.index.values[-1]
+
+        best_dic['gpu'] = log_scalars['gpu'].data[0].max()
+        best_dic['name'] = runner.cfg.project_name
         
         total_pd = pd.read_csv(total_pathname)
         
         
         if len(total_pd[total_pd['name'] == runner.cfg.project_name]) == 0:
-            total_pd = pd.concat([ pd.read_csv(total_pathname), pd.DataFrame(best_dic) ],axis=0, ignore_index=True)
+            total_pd = pd.concat([ total_pd , pd.DataFrame([best_dic]) ],axis=0, ignore_index=True)
         else:
-            total_pd[total_pd['name'] == runner.cfg.project_name] = pd.DataFrame(best_dic)[total_pd.columns]
+            total_pd[total_pd['name'] == runner.cfg.project_name] = pd.DataFrame([best_dic])[total_pd.columns].values
         
         total_pd.to_csv(total_pathname, index=False)
 

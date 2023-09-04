@@ -4,5 +4,5 @@ custom_imports = dict(
 
 
 custom_hooks = [
-    dict(type='MySelfExpHook', interval=50)
+    dict(type='MySelfExpHook')
 ]
