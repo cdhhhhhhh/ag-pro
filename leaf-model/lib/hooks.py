@@ -57,7 +57,7 @@ class MySelfExpHook(Hook):
 
         
         # 最优数据
-        best_row = val_pd[val_pd['val/coco/bbox_mAP_50'] == val_pd['val/coco/bbox_mAP_50'].max()].iloc[-1]
+        best_row = val_pd[val_pd['val/coco/bbox_mAP_50'] == val_pd['val/coco/bbox_mAP_50'].max()].iloc[0]
         best_dic = best_row.to_dict()
         # best_i = best_row.index.values[-1]
 

@@ -141,15 +141,13 @@ def main():
     cfg.test_dataloader = cfg.val_dataloader
     
     cfg.val_evaluator.ann_file = data_root + '/val_annotations.json'
+    cfg.val_evaluator.proposal_nums = (100, 300, 1000) ## coco设定
+
     cfg.test_evaluator = cfg.val_evaluator
     
-    ## coco设定
-    
-    cfg.val_evaluator.proposal_nums = (100, 300, 1000)
-    # cfg.model.test_cfg.nms.iou_threshold = 0.65
-    
 
 
+    
     # 加入公共模块
     
     # cfg.custom_imports = dict(

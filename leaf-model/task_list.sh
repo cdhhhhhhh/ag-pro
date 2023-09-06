@@ -1,35 +1,95 @@
+yolov5_arr=(
+    "/home/neau/sdb/ag-pro/leaf-model/config/yolov5/yolov5-l-p6.py" 
+    "/home/neau/sdb/ag-pro/leaf-model/config/yolov5/yolov5-l.py"
+    "/home/neau/sdb/ag-pro/leaf-model/config/yolov5/yolov5-x.py"
+    "/home/neau/sdb/ag-pro/leaf-model/config/yolov5/yolov5-x-p6.py" 
+)
 
-task_array=(
-    # "/home/neau/sdb/ag-pro/leaf-model/config/yolov5/yolov5-l-p6.py" 
-    # "/home/neau/sdb/ag-pro/leaf-model/config/yolov5/yolov5-l.py"
-    # "/home/neau/sdb/ag-pro/leaf-model/config/yolov5/yolov5-x.py"
-    # "/home/neau/sdb/ag-pro/leaf-model/config/yolov5/yolov5-x-p6.py" 
-    # "/home/neau/sdb/ag-pro/leaf-model/config/yolov8/yolov8-x.py"
-    # "/home/neau/sdb/ag-pro/leaf-model/config/yolov8/yolov8-l.py"
-    # "/home/neau/sdb/ag-pro/leaf-model/config/yolov8/yolov8-s.py"
-    # "/home/neau/sdb/ag-pro/leaf-model/config/yolov8/yolov8-m.py"
-    # "/home/neau/sdb/ag-pro/leaf-model/config/yolov8/yolov8-x-p6.py"
+yolov8_arr=(
+    "/home/neau/sdb/ag-pro/leaf-model/config/yolov8/yolov8-x.py"
+    "/home/neau/sdb/ag-pro/leaf-model/config/yolov8/yolov8-l.py"
+    "/home/neau/sdb/ag-pro/leaf-model/config/yolov8/yolov8-s.py"
+    "/home/neau/sdb/ag-pro/leaf-model/config/yolov8/yolov8-m.py"
+)
+
+
+yolov8_p6_arr=(
+    "/home/neau/sdb/ag-pro/leaf-model/config/yolov8/yolov8-x-p6.py"
     "/home/neau/sdb/ag-pro/leaf-model/config/yolov8/yolov8-l-p6.py"
-    # "/home/neau/sdb/ag-pro/leaf-model/config/yolov8/yolov8-s-p6.py"
-    # "/home/neau/sdb/ag-pro/leaf-model/config/yolov8/yolov8-m-p6.py"
-    )
+    "/home/neau/sdb/ag-pro/leaf-model/config/yolov8/yolov8-s-p6.py"
+    "/home/neau/sdb/ag-pro/leaf-model/config/yolov8/yolov8-m-p6.py"
+)
 
-nms_iou_threshold_arr=($(seq 0.4 0.05 0.9))
-nms_method_arr=("nms"
-                "soft-nms")
+yolov8_p6_1024_arr=(
+    "/home/neau/sdb/ag-pro/leaf-model/config/yolov8/yolov8-x-p6-1024.py"
+    "/home/neau/sdb/ag-pro/leaf-model/config/yolov8/yolov8-l-p6-1024.py"
+    "/home/neau/sdb/ag-pro/leaf-model/config/yolov8/yolov8-s-p6-1024.py"
+    "/home/neau/sdb/ag-pro/leaf-model/config/yolov8/yolov8-m-p6-1024.py"
+)
 
 
-for task in "${task_array[@]}"; do
-  for nms_iou_threshold in "${nms_iou_threshold_arr[@]}"; do
-    tsp "./dist_train.sh" $task 4 --amp --cfg-options model.test_cfg.nms.iou_threshold=$nms_iou_threshold_arr work_dir=/home/neau/sdb/ag-pro/leaf-model/work_dirs/yolov8-l-p6-nms$nms_iou_threshold_arr project_name=yolov8-l-p6-nms$nms_iou_threshold_arr
-    
-    echo "start!!!!--------$task"
-    sleep 1
+# NMS 
+
+yolov8_p6_nms=${yolov8_p6_arr[1]}
+nms_iou_threshold_arr=($(seq 0.3 0.1 0.9))
+nms_method_arr=(
+                # "nms"
+                "soft_nms"
+                # "nms_match"
+                )
+
+
+
+for nms_method in ${nms_method_arr[@]}; do
+  for nms_iou_threshold in ${nms_iou_threshold_arr[@]}; do
+
+    tsp "./dist_train.sh" ${yolov8_p6_nms} 4 --amp --cfg-options model.test_cfg.nms.type=${nms_method} model.test_cfg.nms.iou_threshold=$nms_iou_threshold work_dir=/home/neau/sdb/ag-pro/leaf-model/work_dirs/yolov8-l-p6-${nms_method}$nms_iou_threshold project_name=yolov8-l-p6-${nms_method}$nms_iou_threshold
+    # echo --cfg-options model.test_cfg.nms.type=${nms_method} model.test_cfg.nms.iou_threshold=$nms_iou_threshold work_dir=/home/neau/sdb/ag-pro/leaf-model/work_dirs/yolov8-l-p6-${nms_method}$nms_iou_threshold project_name=yolov8-l-p6-${nms_method}$nms_iou_threshold
   done
 done
 
 
-# "./dist_train.sh" /home/neau/sdb/ag-pro/leaf-model/config/yolov8/yolov8-l-p6.py 4 --amp --cfg-options model.test_cfg.nms.iou_threshold=$nms_iou_threshold_arr work_dir=/home/neau/sdb/ag-pro/leaf-model/work_dirs/yolov8-l-p6-nms$nms_iou_threshold_arr project_name=yolov8-l-p6-nms$nms_iou_threshold_arr
 
 
-# python /home/neau/sdb/mmyolo/tools/misc/print_config.py  /home/neau/sdb/ag-pro/leaf-model/config/yolov8/yolov8-l-p6.py    --save-path ./test_config.py --cfg-options model.test_cfg.nms.iou_threshold=$nms_iou_threshold_arr work_dirs=/home/neau/sdb/ag-pro/leaf-model/work_dirs/yolov8-l-p6-nms$nms_iou_threshold_arr
+# model
+# task_array=(${yolov5_arr} ${yolov8_arr} ${yolov8_p6_arr} ${yolov8_p6_1024_arr})
+# for task in ${task_array[@]}; do
+#   for nms_iou_threshold in ${nms_iou_threshold_arr[@]}; do
+    
+#     tsp "./dist_train.sh" $task 4 --amp --cfg-options model.test_cfg.nms.type=softnms model.test_cfg.nms.iou_threshold=$nms_iou_threshold work_dir=/home/neau/sdb/ag-pro/leaf-model/work_dirs/yolov8-l-p6-nms$nms_iou_threshold project_name=yolov8-l-p6-nms$nms_iou_threshold
+#     echo "start!!!!--------$task"
+
+#     sleep 1
+#   done
+# done
+
+
+
+
+# 注意力
+
+
+
+
+
+# neck
+
+
+
+
+# IOU
+
+
+
+
+# TTA
+
+
+
+# 多尺度
+
+
+# 数据增强
+
+
+
