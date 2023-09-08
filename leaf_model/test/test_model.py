@@ -4,7 +4,6 @@ from mmengine.registry import Registry
 
 from mmyolo.registry import MODELS
 
-import torch
 
 # config_file = '/home/neau/sdb/ag-pro/leaf_model/config/yolov5/yolov5_l.py'
 # cfg = Config.fromfile(config_file)
@@ -103,28 +102,10 @@ import torch
     
 
 
-from mmyolo.models.necks.yolov5_pafpn import YOLOv5PAFPN
-
-fpn = YOLOv5PAFPN(
-         act_cfg=dict(inplace=True, type='SiLU'),
-        deepen_factor=1.0,
-        in_channels=[
-            256,
-            512,
-            768,
-            1024,
-        ],
-        norm_cfg=dict(eps=0.001, momentum=0.03, type='BN'),
-        num_csp_blocks=3,
-        out_channels=[
-            256,
-            512,
-            768,
-            1024,
-        ],
-        widen_factor=1.0)
+from leaf_model_tools.CA import CoordAtt
 
 
-print(fpn)
+img = torch.rand(1,3,640,640)
+ca = CoordAtt(3, 3)
 
 

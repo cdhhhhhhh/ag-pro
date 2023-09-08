@@ -3,4 +3,9 @@ leaf_model.egg-info/PKG-INFO
 leaf_model.egg-info/SOURCES.txt
 leaf_model.egg-info/dependency_links.txt
 leaf_model.egg-info/top_level.txt
+lib/CA.py
+lib/YOLOv8CSPDarknet.py
+lib/__init__.py
+lib/hooks.py
+lib/registry.py
 test/test_model.py

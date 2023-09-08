@@ -13,11 +13,20 @@ yolov8_arr=(
     "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-s.py"
     "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-m.py"
 )
+
+
 yolov8_cbam_arr=(
     "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-x-cbam-backbone.py"
     "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-l-cbam-backbone.py"
     "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-s-cbam-backbone.py"
     "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-m-cbam-backbone.py"
+)
+
+yolov8_ca_arr=(
+    "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-x-ca-backbone.py"
+    "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-l-ca-backbone.py"
+    "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-s-ca-backbone.py"
+    "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-m-ca-backbone.py"
 )
 
 yolov8_p6_arr=(
@@ -62,8 +71,8 @@ yolov8_p6_arr=(
 # task_array=(${yolov5_arr} ${yolov8_arr} ${yolov8_p6_arr} ${yolov8_p6_1024_arr})
 
 
-for task in ${yolov8_cbam_arr[@]}; do
-    tsp "./dist_train.sh" $task 4 --amp
+for task in ${yolov8_ca_arr[@]}; do
+    tsp "./dist_train.sh" $task 4 --amp 
 done
 
 
