@@ -1,7 +1,5 @@
 val_dataloader = dict(
     dataset=dict(
-        batch_shapes_cfg=dict(
-            img_size=1280),
         pipeline=[
             dict(backend_args=None, type='LoadImageFromFile'),
             dict(scale=(
@@ -35,7 +33,6 @@ val_dataloader = dict(
 
 
 train_dataloader = dict(
-
     dataset=dict(
         pipeline=[
             dict(backend_args=None, type='LoadImageFromFile'),
@@ -93,6 +90,7 @@ train_dataloader = dict(
                             114,
                             114,
                         ),
+                        max_aspect_ratio=100,
                         max_rotate_degree=0.0,
                         max_shear_degree=0.0,
                         scaling_ratio_range=(
@@ -101,7 +99,7 @@ train_dataloader = dict(
                         ),
                         type='YOLOv5RandomAffine'),
                 ],
-                prob=0.1,
+                prob=0.15,
                 type='YOLOv5MixUp'),
             dict(
                 bbox_params=dict(
@@ -135,6 +133,7 @@ train_dataloader = dict(
         type='YOLOv5CocoDataset')
     
     )
+
 
 
 
