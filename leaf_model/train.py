@@ -112,7 +112,7 @@ def main():
 
 
     # 对add_config 进行合并配置
-    base_config = Config.fromfile('/home/neau/sdb/ag-pro/leaf-model/config/base_config.py') 
+    base_config = Config.fromfile('/home/neau/sdb/ag-pro/leaf_model/config/base_config.py') 
     cfg.merge_from_dict(base_config.to_dict())
     
     if type(cfg.add_config) == str:     
@@ -124,6 +124,8 @@ def main():
         for config_item in cfg.add_config:
             config_2 = Config.fromfile(config_item)
             cfg.merge_from_dict(config_2.to_dict())
+            
+
     # 训练数据集和验证数据集
     data_root = '/home/neau/trainset/leafs'
     metainfo = dict(classes=('round','sharp'))

@@ -6,7 +6,7 @@ from mmyolo.registry import MODELS
 
 import torch
 
-# config_file = '/home/neau/sdb/ag-pro/leaf-model/config/yolov5/yolov5_l.py'
+# config_file = '/home/neau/sdb/ag-pro/leaf_model/config/yolov5/yolov5_l.py'
 # cfg = Config.fromfile(config_file)
 
 # img = torch.rand(1,3,640,640)
