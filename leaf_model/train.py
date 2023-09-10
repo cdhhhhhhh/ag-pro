@@ -113,17 +113,38 @@ def main():
 
     # 对add_config 进行合并配置
     base_config = Config.fromfile('/home/neau/sdb/ag-pro/leaf_model/config/base_config.py') 
+    
+    # custom_imports = []
+    # custom_imports = custom_imports + base_config.custom_imports.imports
+    
+    # if 'custom_imports' in cfg:
+    #     custom_imports = custom_imports + cfg['custom_imports']['imports']
+    #     cfg['custom_imports']['imports'] = custom_imports
+        
     cfg.merge_from_dict(base_config.to_dict())
     
     if type(cfg.add_config) == str:     
         
         config_2 = Config.fromfile(cfg.add_config)
-        cfg.merge_from_dict(config_2.to_dict())
+        config_2_dic = config_2.to_dict()
+        
+        # if 'custom_imports' in config_2_dic:
+        #     custom_imports = custom_imports + config_2_dic['custom_imports']['imports']
+        #     config_2_dic['custom_imports']['imports'] = custom_imports
+        
+        
+        cfg.merge_from_dict(config_2_dic)
     else:
         
         for config_item in cfg.add_config:
             config_2 = Config.fromfile(config_item)
-            cfg.merge_from_dict(config_2.to_dict())
+            config_2_dic = config_2.to_dict()
+            
+            # if 'custom_imports' in config_2_dic:
+            #     custom_imports = custom_imports + config_2_dic['custom_imports']['imports']
+            #     config_2_dic['custom_imports']['imports'] = custom_imports
+            
+            cfg.merge_from_dict(config_2_dic)
             
 
     # 训练数据集和验证数据集

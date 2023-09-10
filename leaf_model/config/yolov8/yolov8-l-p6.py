@@ -10,3 +10,4 @@ add_config = [
     '/home/neau/sdb/ag-pro/leaf-model/config/yolov8/base-p6.py',
     '/home/neau/sdb/ag-pro/leaf-model/config/yolov8/base-1024.py'
 ]
+

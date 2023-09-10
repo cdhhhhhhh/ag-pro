@@ -3,11 +3,14 @@ _base_ = [
 ]
 
 
-project_name = 'yolov8-l-cbam-backbone'
+
+project_name = 'yolov8-l-ca-backbone'
+
+
 
 
 model = dict(
     backbone = dict(
-        attention = 'cbam'
+        attention = 'ca'
     )
 )

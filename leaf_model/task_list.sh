@@ -15,19 +15,19 @@ yolov8_arr=(
 )
 
 
-yolov8_cbam_arr=(
-    "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-x-cbam-backbone.py"
-    "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-l-cbam-backbone.py"
-    "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-s-cbam-backbone.py"
-    "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-m-cbam-backbone.py"
-)
+# yolov8_cbam_arr=(
+#     "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-x-cbam-backbone.py"
+#     "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-l-cbam-backbone.py"
+#     "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-s-cbam-backbone.py"
+#     "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-m-cbam-backbone.py"
+# )
 
-yolov8_ca_arr=(
-    "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-x-ca-backbone.py"
-    "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-l-ca-backbone.py"
-    "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-s-ca-backbone.py"
-    "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-m-ca-backbone.py"
-)
+# yolov8_ca_arr=(
+#     "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-x-CA-backbone.py"
+#     "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-l-CA-backbone.py"
+#     "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-s-CA-backbone.py"
+#     "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-m-CA-backbone.py"
+# )
 
 yolov8_p6_arr=(
     "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-x-p6.py"
@@ -36,14 +36,24 @@ yolov8_p6_arr=(
     "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-m-p6.py"
 )
 
-# yolov8_p6_1024_arr=(
-#     "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-x-p6-1024.py"
-#     "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-l-p6-1024.py"
-#     "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-s-p6-1024.py"
-#     "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-m-p6-1024.py"
-# )
+yolov8_p6_1024_arr=(
+    "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-x-p6-1024.py"
+    "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-l-p6-1024.py"
+    "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-s-p6-1024.py"
+    "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-m-p6-1024.py"
+)
 
+yolov8_l_attetion=(
+    "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-l-cbam-backbone.py"
+    "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-l-ca-backbone.py"
+    "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-l-ca-neck.py"
+    "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-l-cbam-neck.py"
+)
 
+yolov8_l_iou=(
+    "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-l-siou.py"
+    "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-l-giou.py"
+)
 # NMS 
 
 # yolov8_p6_nms=${yolov8_p6_arr[1]}
@@ -68,28 +78,16 @@ yolov8_p6_arr=(
 
 
 # model
-# task_array=(${yolov5_arr} ${yolov8_arr} ${yolov8_p6_arr} ${yolov8_p6_1024_arr})
+task_array=(${yolov5_arr[@]} ${yolov8_arr[@]} ${yolov8_l_attetion[@]} ${yolov8_l_iou[@]})
 
 
-for task in ${yolov8_ca_arr[@]}; do
+for task in ${task_array[@]}; do
+
     tsp "./dist_train.sh" $task 4 --amp 
 done
 
 
 
-
-# 注意力
-
-
-
-
-
-# neck
-
-
-
-
-# IOU
 
 
 

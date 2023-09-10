@@ -2,7 +2,7 @@ _base_ = [
     '/home/neau/sdb/mmyolo/configs/yolov5/yolov5_l-v61_syncbn_fast_8xb16-300e_coco.py',
 ]
 
-add_config = '/home/neau/sdb/ag-pro/leaf-model/config/yolov5/base.py'
+add_config = '/home/neau/sdb/ag-pro/leaf_model/config/yolov5/base.py'
 project_name = 'yolov5-l'
 
 

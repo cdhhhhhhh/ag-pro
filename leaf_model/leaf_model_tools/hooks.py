@@ -40,7 +40,7 @@ class MySelfExpHook(Hook):
         log_scalars = runner.message_hub.state_dict()['log_scalars']
         val_interval = runner.cfg.train_cfg.val_interval
         max_epochs = runner.cfg.train_cfg.max_epochs
-        total_pathname = '/home/neau/sdb/ag-pro/leaf-model/totals.csv'
+        total_pathname = '/home/neau/sdb/ag-pro/leaf_model/totals.csv'
 
         # 训练数据
 

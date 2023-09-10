@@ -1,5 +1,5 @@
 custom_imports = dict(
-    imports=['lib.hooks'],
+    imports=['leaf_model_tools.hooks'],
     allow_failed_imports=False)
 
 
