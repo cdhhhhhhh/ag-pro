@@ -8,10 +8,10 @@ yolov5_arr=(
 
 
 yolov8_arr=(
-    "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-x.py"
+    # "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-x.py"
     "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-l.py"
-    "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-s.py"
-    "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-m.py"
+    # "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-s.py"
+    # "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-m.py"
 )
 
 
@@ -78,10 +78,10 @@ yolov8_l_iou=(
 
 
 # model
-task_array=(${yolov5_arr[@]} ${yolov8_arr[@]} ${yolov8_l_attetion[@]} ${yolov8_l_iou[@]})
+task_array=( ${yolov8_arr[@]} ${yolov8_l_attetion[@]} ${yolov8_l_iou[@]})
 
 
-for task in ${task_array[@]}; do
+for task in ${yolov8_arr[@]}; do
 
     tsp "./dist_train.sh" $task 4 --amp 
 done
