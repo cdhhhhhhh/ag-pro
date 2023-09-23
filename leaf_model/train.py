@@ -148,18 +148,18 @@ def main():
             
 
     # 训练数据集和验证数据集
-    data_root = '/home/neau/trainset/leafs'
+    data_root = '/home/neau/trainset/crop_leafs_dataset'
     metainfo = dict(classes=('round','sharp'))
 
     cfg.train_dataloader.dataset.metainfo = metainfo
     cfg.train_dataloader.dataset.data_root = data_root
     cfg.train_dataloader.dataset.ann_file = 'train_annotations.json'
-    cfg.train_dataloader.dataset.data_prefix = dict(img='images/')
+    cfg.train_dataloader.dataset.data_prefix = dict(img='./')
 
     cfg.val_dataloader.dataset.metainfo = metainfo
     cfg.val_dataloader.dataset.data_root = data_root
     cfg.val_dataloader.dataset.ann_file = 'val_annotations.json'
-    cfg.val_dataloader.dataset.data_prefix = dict(img='images/')
+    cfg.val_dataloader.dataset.data_prefix = dict(img='./')
 
     cfg.test_dataloader = cfg.val_dataloader
     

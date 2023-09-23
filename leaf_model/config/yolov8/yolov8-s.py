@@ -5,7 +5,7 @@ _base_ = [
 add_config = '/home/neau/sdb/ag-pro/leaf_model/config/yolov8/base.py'
 
 project_name = 'yolov8-s'
-train_batch_size_per_gpu = 2
+train_batch_size_per_gpu = 4
 
 
 
@@ -13,4 +13,6 @@ train_dataloader = dict(
     batch_size=train_batch_size_per_gpu,
 )
 
+
 _base_.optim_wrapper.optimizer.batch_size_per_gpu = train_batch_size_per_gpu
+

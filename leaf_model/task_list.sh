@@ -54,6 +54,9 @@ yolov8_l_iou=(
     "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-l-siou.py"
     "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-l-giou.py"
 )
+
+
+
 # NMS 
 
 # yolov8_p6_nms=${yolov8_p6_arr[1]}
@@ -81,7 +84,7 @@ yolov8_l_iou=(
 task_array=( ${yolov8_arr[@]} ${yolov8_l_attetion[@]} ${yolov8_l_iou[@]})
 
 
-for task in ${yolov8_arr[@]}; do
+for task in ${yolov8_p6_arr[@]}; do
 
     tsp "./dist_train.sh" $task 4 --amp 
 done
@@ -96,7 +99,11 @@ done
 
 
 
+
 # 多尺度
+
+
+
 
 
 # 数据增强
