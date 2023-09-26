@@ -4,12 +4,13 @@ _base_ = [
 
 
 
-project_name = 'yolov8-s-ca-neck'
-
-
-
 model = dict(
-    neck = dict(
-        attention = 'ca'
+    bbox_head = dict(
+        loss_bbox = dict(
+            iou_mode='eiou'
+        )
     )
 )
+
+
+

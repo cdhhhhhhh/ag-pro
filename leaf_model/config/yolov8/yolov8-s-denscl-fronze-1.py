@@ -10,3 +10,4 @@ model = dict(
         frozen_stages = 1
     )
 )
+find_unused_parameters=True

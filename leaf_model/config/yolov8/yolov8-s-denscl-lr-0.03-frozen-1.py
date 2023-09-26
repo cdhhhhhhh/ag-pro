@@ -11,3 +11,4 @@ model = dict(
     )
 )
 _base_.optim_wrapper.optimizer.lr = 0.03
+find_unused_parameters=True

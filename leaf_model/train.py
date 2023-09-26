@@ -34,6 +34,13 @@ def parse_args():
         help='If specify checkpoint path, resume from it, while if not '
         'specify, try to auto resume from the latest checkpoint '
         'in the work directory.')
+    
+    parser.add_argument(
+        '--debug',
+        action='store_true',
+        default=False,
+        help='enable debug training')
+    
     parser.add_argument(
         '--cfg-options',
         nargs='+',
@@ -123,7 +130,7 @@ def main():
         
     cfg.merge_from_dict(base_config.to_dict())
     
-    if type(cfg.add_config) == str:     
+    if hasattr(cfg,'add_config') and type(cfg.add_config) == str:     
         
         config_2 = Config.fromfile(cfg.add_config)
         config_2_dic = config_2.to_dict()
@@ -186,10 +193,20 @@ def main():
     if hasattr(cfg,'project_name'):
         project_name = cfg.project_name
     else:
+        cfg.project_name = osp.basename(cfg.filename)[:-3]
         project_name = osp.basename(cfg.filename)[:-3]
 
+    
     cfg.visualizer.vis_backends[1].init_kwargs['name'] = project_name
 
+    if args.debug is True:
+
+        cfg.visualizer.vis_backends = []
+        cfg.train_dataloader.batch_size = 1
+        
+        
+        
+        
     # build the runner from config
     if 'runner_type' not in cfg:
         # build the default runner

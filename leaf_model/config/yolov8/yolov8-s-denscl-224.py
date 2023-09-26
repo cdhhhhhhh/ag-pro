@@ -4,7 +4,7 @@ _base_ = [
 
 add_config = '/home/neau/sdb/ag-pro/leaf_model/config/yolov8/base.py'
 
-project_name = 'yolov8-s-denscl-lr-frozen-1'
+project_name = 'yolov8-s-denscl-lr-f'
 train_batch_size_per_gpu = 4
 
 
@@ -16,10 +16,6 @@ model = dict(
 )
 
 
-
-_base_.model.backbone.norm_cfg.type = 'SyncBN'
-_base_.model.bbox_head.head_module.norm_cfg.type = 'SyncBN'
-_base_.model.neck.norm_cfg.type = 'SyncBN'
 
 
 
