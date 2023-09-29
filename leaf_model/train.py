@@ -119,7 +119,7 @@ def main():
 
 
     # 对add_config 进行合并配置
-    base_config = Config.fromfile('/home/neau/sdb/ag-pro/leaf_model/config/base_config.py') 
+    # base_config = Config.fromfile('/home/neau/sdb/ag-pro/leaf_model/config/base_config.py') 
     
     # custom_imports = []
     # custom_imports = custom_imports + base_config.custom_imports.imports
@@ -128,52 +128,52 @@ def main():
     #     custom_imports = custom_imports + cfg['custom_imports']['imports']
     #     cfg['custom_imports']['imports'] = custom_imports
         
-    cfg.merge_from_dict(base_config.to_dict())
+    # cfg.merge_from_dict(base_config.to_dict())
     
-    if hasattr(cfg,'add_config') and type(cfg.add_config) == str:     
+    # if hasattr(cfg,'add_config') and type(cfg.add_config) == str:     
         
-        config_2 = Config.fromfile(cfg.add_config)
-        config_2_dic = config_2.to_dict()
+    #     config_2 = Config.fromfile(cfg.add_config)
+    #     config_2_dic = config_2.to_dict()
         
-        # if 'custom_imports' in config_2_dic:
-        #     custom_imports = custom_imports + config_2_dic['custom_imports']['imports']
-        #     config_2_dic['custom_imports']['imports'] = custom_imports
+    #     # if 'custom_imports' in config_2_dic:
+    #     #     custom_imports = custom_imports + config_2_dic['custom_imports']['imports']
+    #     #     config_2_dic['custom_imports']['imports'] = custom_imports
         
         
-        cfg.merge_from_dict(config_2_dic)
-    else:
+    #     cfg.merge_from_dict(config_2_dic)
+    # else:
         
-        for config_item in cfg.add_config:
-            config_2 = Config.fromfile(config_item)
-            config_2_dic = config_2.to_dict()
+    #     for config_item in cfg.add_config:
+    #         config_2 = Config.fromfile(config_item)
+    #         config_2_dic = config_2.to_dict()
             
-            # if 'custom_imports' in config_2_dic:
-            #     custom_imports = custom_imports + config_2_dic['custom_imports']['imports']
-            #     config_2_dic['custom_imports']['imports'] = custom_imports
+    #         # if 'custom_imports' in config_2_dic:
+    #         #     custom_imports = custom_imports + config_2_dic['custom_imports']['imports']
+    #         #     config_2_dic['custom_imports']['imports'] = custom_imports
             
-            cfg.merge_from_dict(config_2_dic)
+    #         cfg.merge_from_dict(config_2_dic)
             
 
     # 训练数据集和验证数据集
-    data_root = '/home/neau/trainset/crop_leafs_dataset'
-    metainfo = dict(classes=('round','sharp'))
+    # data_root = '/home/neau/trainset/crop_leafs_dataset'
+    # metainfo = dict(classes=('round','sharp'))
 
-    cfg.train_dataloader.dataset.metainfo = metainfo
-    cfg.train_dataloader.dataset.data_root = data_root
-    cfg.train_dataloader.dataset.ann_file = 'train_annotations.json'
-    cfg.train_dataloader.dataset.data_prefix = dict(img='./')
+    # cfg.train_dataloader.dataset.metainfo = metainfo
+    # cfg.train_dataloader.dataset.data_root = data_root
+    # cfg.train_dataloader.dataset.ann_file = 'train_annotations.json'
+    # cfg.train_dataloader.dataset.data_prefix = dict(img='./')
 
-    cfg.val_dataloader.dataset.metainfo = metainfo
-    cfg.val_dataloader.dataset.data_root = data_root
-    cfg.val_dataloader.dataset.ann_file = 'val_annotations.json'
-    cfg.val_dataloader.dataset.data_prefix = dict(img='./')
+    # cfg.val_dataloader.dataset.metainfo = metainfo
+    # cfg.val_dataloader.dataset.data_root = data_root
+    # cfg.val_dataloader.dataset.ann_file = 'val_annotations.json'
+    # cfg.val_dataloader.dataset.data_prefix = dict(img='./')
 
-    cfg.test_dataloader = cfg.val_dataloader
+    # cfg.test_dataloader = cfg.val_dataloader
     
-    cfg.val_evaluator.ann_file = data_root + '/val_annotations.json'
-    cfg.val_evaluator.proposal_nums = (100, 300, 1000) ## coco设定
+    # cfg.val_evaluator.ann_file = data_root + '/val_annotations.json'
+    # cfg.val_evaluator.proposal_nums = (100, 300, 1000) ## coco设定
 
-    cfg.test_evaluator = cfg.val_evaluator
+    # cfg.test_evaluator = cfg.val_evaluator
     
 
 

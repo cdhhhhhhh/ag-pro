@@ -8,9 +8,7 @@ model = dict(
     backbone = dict(
         attention = dict(
             type = 'ema',
-            pos = 'mid'
+            pos = 'last'
         )
     )
 )
-
-

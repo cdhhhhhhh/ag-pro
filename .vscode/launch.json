@@ -13,7 +13,7 @@
             "justMyCode": true,
             // "cwd": "/home/neau/sdb/ag-pro/leaf-model",
             "args": [
-                "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-s-p6-4.py",
+                "/home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-s-ag-mixup1-mosaic.py",
                 "--debug"
             ],
             "env": {

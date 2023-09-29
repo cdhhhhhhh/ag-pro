@@ -2,15 +2,15 @@
 
 
 # 验证和训练
-python tools/analysis_tools/dataset_analysis.py /home/neau/sdb/ag-pro/leaf_model/config/yolov5/yolov5-l-p6.py 
+python /home/neau/sdb/mmyolo/tools/analysis_tools/dataset_analysis.py /home/neau/sdb/ag-pro/leaf_model/work_dirs/yolov8-s/yolov8-s.py 
 python tools/analysis_tools/dataset_analysis.py /home/neau/sdb/ag-pro/leaf_model/config/yolov5/yolov5-l-p6.py --val-dataset
 
 
 # 数据强化步骤
 
-python tools/analysis_tools/browse_dataset.py \
-    /home/neau/sdb/mmyolo/task/leafs/wheet/yolov5_l-p6-v62_syncbn_fast_8xb16-300e_coco.py \
-    -m pipeline \
+python /home/neau/sdb/mmyolo/tools/analysis_tools/browse_dataset.py \
+    /home/neau/sdb/ag-pro/leaf_model/config/yolov8/yolov8-s-ag-mosaic9-mixup.py \
+    -m pipeline 
     
 
 # 打印配置文件
