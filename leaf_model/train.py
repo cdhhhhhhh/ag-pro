@@ -17,6 +17,7 @@ from mmyolo.utils import is_metainfo_lower
 
 
 
+
 def parse_args():
     parser = argparse.ArgumentParser(description='Train a detector')
     parser.add_argument('config', help='train config file path')
@@ -202,7 +203,7 @@ def main():
     if args.debug is True:
 
         cfg.visualizer.vis_backends = []
-        cfg.train_dataloader.batch_size = 1
+        cfg.train_dataloader.batch_size = 4
         
         
         

@@ -32,8 +32,18 @@ class MySelfExpHook(Hook):
                 
     def after_val_epoch(self, runner, metrics):
         # GPU使用率
-        gpus_memory = get_gpu_memory()
-        runner.message_hub.update_scalar('gpu', max([round(i / 11264 , 4) for i in gpus_memory]), 1)
+        # gpus_memory = get_gpu_memory()
+        # runner.message_hub.update_scalar('gpu', max([round(i / 11264 , 4) for i in gpus_memory]), 1)
+        
+        
+        # 验证数据
+        log_scalars = runner.message_hub.state_dict()['log_scalars']
+        val_interval = runner.cfg.train_cfg.val_interval
+        val_keys = list(filter(lambda item: 'val/coco' in item,log_scalars.keys()))
+        val_dic = {key: log_scalars[key].data[0] for key in val_keys }
+        val_dic['epoch'] = [ val_interval*i for i in range(1, len(log_scalars[val_keys[0]].data[0]) + 1)]
+        val_pd = pd.DataFrame(val_dic)
+        val_pd.to_csv(runner.cfg.work_dir + '/val_log.csv')
     
     
     def after_train(self, runner):
@@ -56,23 +66,23 @@ class MySelfExpHook(Hook):
         val_pd.to_csv(runner.cfg.work_dir + '/val_log.csv')
 
         
-        # 最优数据
-        best_row = val_pd[val_pd['val/coco/bbox_mAP_50'] == val_pd['val/coco/bbox_mAP_50'].max()].iloc[0]
-        best_dic = best_row.to_dict()
-        # best_i = best_row.index.values[-1]
+        # # 最优数据
+        # best_row = val_pd[val_pd['val/coco/bbox_mAP_50'] == val_pd['val/coco/bbox_mAP_50'].max()].iloc[0]
+        # best_dic = best_row.to_dict()
+        # # best_i = best_row.index.values[-1]
 
-        best_dic['gpu'] = log_scalars['gpu'].data[0].max()
-        best_dic['name'] = runner.cfg.project_name
+        # # best_dic['gpu'] = log_scalars['gpu'].data[0].max()
+        # best_dic['name'] = runner.cfg.project_name
         
-        total_pd = pd.read_csv(total_pathname)
+        # total_pd = pd.read_csv(total_pathname)
         
         
-        if len(total_pd[total_pd['name'] == runner.cfg.project_name]) == 0:
-            total_pd = pd.concat([ total_pd , pd.DataFrame([best_dic]) ],axis=0, ignore_index=True)
-        else:
-            total_pd[total_pd['name'] == runner.cfg.project_name] = pd.DataFrame([best_dic])[total_pd.columns].values
+        # if len(total_pd[total_pd['name'] == runner.cfg.project_name]) == 0:
+        #     total_pd = pd.concat([ total_pd , pd.DataFrame([best_dic]) ],axis=0, ignore_index=True)
+        # else:
+        #     total_pd[total_pd['name'] == runner.cfg.project_name] = pd.DataFrame([best_dic])[total_pd.columns].values
         
-        total_pd.to_csv(total_pathname, index=False)
+        # total_pd.to_csv(total_pathname, index=False)
 
     
     

@@ -6,7 +6,12 @@ import torch.nn.functional as F
 from mmyolo.registry import MODELS
 from mmyolo.models.layers.yolo_bricks import CSPLayerWithTwoConv
 from mmyolo.models.utils import make_divisible, make_round
+from leaf_model_tools.CA import CoordAtt
 
+from mmcv.ops import SAConv2d
+from mmcv.cnn import ConvTranspose2d
+
+ 
 def BasicConv(filter_in, filter_out, kernel_size, stride=1):
     pad = (kernel_size - 1) // 2 if kernel_size else 0
     return nn.Sequential(OrderedDict([
@@ -30,43 +35,60 @@ class BasicBlock(nn.Module):
 
     def __init__(self, filter_in, filter_out):
         super(BasicBlock, self).__init__()
-        # self.conv1 = nn.Conv2d(filter_in, filter_out, 3, padding=1)
-        # self.bn1 = nn.BatchNorm2d(filter_out, momentum=0.1)
-        # self.silu = nn.SiLU(inplace=True)
-        # self.conv2 = nn.Conv2d(filter_out, filter_out, 3, padding=1)
-        # self.bn2 = nn.BatchNorm2d(filter_out, momentum=0.1)
-        self.c2f = CSPLayerWithTwoConv(
-            filter_in,
-            filter_out,
-            num_blocks=make_round(3, 0.33),
-            add_identity=True,
-            norm_cfg=dict(eps=0.001, momentum=0.03, type='SyncBN'),
-            act_cfg=dict(inplace=True, type='SiLU'))
+        self.conv1 = nn.Conv2d(filter_in, filter_out, 3, padding=1)
+        self.bn1 = nn.BatchNorm2d(filter_out, momentum=0.1)
+        self.silu = nn.SiLU(inplace=True)
+        self.conv2 = nn.Conv2d(filter_out, filter_out, 3, padding=1)
+        self.bn2 = nn.BatchNorm2d(filter_out, momentum=0.1)
+        # self.c2f = CSPLayerWithTwoConv(
+        #     filter_in,
+        #     filter_out,
+        #     num_blocks=make_round(3, 0.33),
+        #     add_identity=False,
+        #     norm_cfg=dict(eps=0.001, momentum=0.03, type='SyncBN'),
+        #     act_cfg=dict(inplace=True, type='SiLU'))
             
     def forward(self, x):
-        # residual = x
+        residual = x
 
-        # out = self.conv1(x)
-        # out = self.bn1(out)
-        # out = self.silu(out)
+        out = self.conv1(x)
+        out = self.bn1(out)
+        out = self.silu(out)
 
-        # out = self.conv2(out)
-        # out = self.bn2(out)
+        out = self.conv2(out)
+        out = self.bn2(out)
 
-        # out += residual
-        # out = self.silu(out)
-        out = self.c2f(x)
+        out += residual
+        out = self.silu(out)
+        # out = self.c2f(x)
         return out
 
 
 class Upsample(nn.Module):
-    def __init__(self, in_channels, out_channels, scale_factor=2):
+    def __init__(self, in_channels, out_channels, scale_factor=2,sc=False):
         super(Upsample, self).__init__()
+        if scale_factor == 2:
+            padding = 1
+        elif scale_factor == 4:
+            padding = 0
 
-        self.upsample = nn.Sequential(
-            BasicConv(in_channels, out_channels, 1),
-            nn.Upsample(scale_factor=scale_factor, mode='bilinear')
-        )
+        if sc:
+            upsample = nn.Sequential(
+                ConvTranspose2d(
+                    in_channels,
+                    out_channels,
+                    4,
+                    scale_factor,
+                    padding
+                )
+            )
+            
+        else:
+            upsample = nn.Sequential(
+                BasicConv(in_channels, out_channels, 1),
+                nn.Upsample(scale_factor=scale_factor, mode='bilinear'))
+            
+        self.upsample = upsample
 
     def forward(self, x, ):
         x = self.upsample(x)
@@ -74,12 +96,25 @@ class Upsample(nn.Module):
 
 
 class Downsample_x2(nn.Module):
-    def __init__(self, in_channels, out_channels):
+    def __init__(self, in_channels, out_channels,sc):
         super(Downsample_x2, self).__init__()
-
-        self.downsample = nn.Sequential(
+        
+        if sc:
+            downsample = nn.Sequential(
+                SAConv2d(
+                    in_channels,
+                    out_channels,
+                    3,
+                    2,
+                    1
+                )
+            )
+        else:
+            downsample = nn.Sequential(
             Conv(in_channels, out_channels, 2, 2)
         )
+
+        self.downsample = downsample
 
     def forward(self, x, ):
         x = self.downsample(x)
@@ -88,12 +123,23 @@ class Downsample_x2(nn.Module):
 
 
 class Downsample_x4(nn.Module):
-    def __init__(self, in_channels, out_channels):
+    def __init__(self, in_channels, out_channels,sc):
         super(Downsample_x4, self).__init__()
-
-        self.downsample = nn.Sequential(
-            Conv(in_channels, out_channels, 4, 4)
-        )
+        
+        
+        if sc:
+            self.downsample = nn.Sequential(
+                SAConv2d(
+                    in_channels,
+                    out_channels,
+                    4,
+                    4,
+                    1)
+            )
+        else:
+            self.downsample = nn.Sequential(
+                Conv(in_channels, out_channels, 4, 4)
+            )
 
     def forward(self, x, ):
         x = self.downsample(x)
@@ -165,7 +211,7 @@ class ASFF_3(nn.Module):
 
 
 class ScaleBlockBody(nn.Module):
-    def __init__(self, channels=[128, 256, 512]):
+    def __init__(self, channels=[128, 256, 512],sc=False):
         super(ScaleBlockBody, self).__init__()
 
         self.blocks_top1 = nn.Sequential(
@@ -178,8 +224,8 @@ class ScaleBlockBody(nn.Module):
             BasicConv(channels[2], channels[2], 1),
         )
 
-        self.downsample_top1_2 = Downsample_x2(channels[0], channels[1])
-        self.upsample_mid1_2 = Upsample(channels[1], channels[0], scale_factor=2)
+        self.downsample_top1_2 = Downsample_x2(channels[0], channels[1],sc)
+        self.upsample_mid1_2 = Upsample(channels[1], channels[0], scale_factor=2,sc=sc)
 
         self.asff_top1 = ASFF_2(inter_dim=channels[0])
         self.asff_mid1 = ASFF_2(inter_dim=channels[1])
@@ -195,12 +241,12 @@ class ScaleBlockBody(nn.Module):
             BasicBlock(channels[1], channels[1])
         )
 
-        self.downsample_top2_2 = Downsample_x2(channels[0], channels[1])
-        self.downsample_top2_4 = Downsample_x4(channels[0], channels[2])
-        self.downsample_mid2_2 = Downsample_x2(channels[1], channels[2])
-        self.upsample_mid2_2 = Upsample(channels[1], channels[0], scale_factor=2)
-        self.upsample_bot2_2 = Upsample(channels[2], channels[1], scale_factor=2)
-        self.upsample_bot2_4 = Upsample(channels[2], channels[0], scale_factor=4)
+        self.downsample_top2_2 = Downsample_x2(channels[0], channels[1],sc)
+        self.downsample_top2_4 = Downsample_x4(channels[0], channels[2],sc)
+        self.downsample_mid2_2 = Downsample_x2(channels[1], channels[2],sc)
+        self.upsample_mid2_2 = Upsample(channels[1], channels[0], scale_factor=2,sc=sc)
+        self.upsample_bot2_2 = Upsample(channels[2], channels[1], scale_factor=2,sc=sc)
+        self.upsample_bot2_4 = Upsample(channels[2], channels[0], scale_factor=4,sc=sc)
 
         self.asff_top2 = ASFF_3(inter_dim=channels[0])
         self.asff_mid2 = ASFF_3(inter_dim=channels[1])
@@ -249,24 +295,29 @@ class ScaleBlockBody(nn.Module):
         
 @MODELS.register_module()
 class YOLOv8AFPN(nn.Module):
-    def __init__(self, widen_factor=1,in_channels=[256, 512, 1024], out_channels=[256, 512, 1024],):
+    def __init__(self, widen_factor=1,in_channels=[256, 512, 1024], out_channels=[256, 512, 1024],sc=False,ca=False):
         super(YOLOv8AFPN, self).__init__()
         
         in_channels = [make_divisible(i,widen_factor) for i in in_channels]
         out_channels = [make_divisible(i,widen_factor) for i in out_channels]
-
+        self.ca = ca
         
         self.conv1 = BasicConv(in_channels[0], in_channels[0] // 4, 1)
         self.conv2 = BasicConv(in_channels[1], in_channels[1] // 4, 1)
         self.conv3 = BasicConv(in_channels[2], in_channels[2] // 4, 1)
 
         self.body = nn.Sequential(
-            ScaleBlockBody([in_channels[0] // 4, in_channels[1] // 4, in_channels[2] // 4])
+            ScaleBlockBody([in_channels[0] // 4, in_channels[1] // 4, in_channels[2] // 4],sc)
         )
 
         self.conv11 = BasicConv(in_channels[0] // 4, out_channels[0], 1)
         self.conv22 = BasicConv(in_channels[1] // 4, out_channels[1], 1)
         self.conv33 = BasicConv(in_channels[2] // 4, out_channels[2], 1)
+
+        if self.ca:
+            self.ca1 = CoordAtt(out_channels[0],out_channels[0])
+            self.ca2 = CoordAtt(out_channels[1],out_channels[1])
+            self.ca3 = CoordAtt(out_channels[2],out_channels[2])
 
         # ----------------------------------------------------------------#
         #   init weight
@@ -291,4 +342,9 @@ class YOLOv8AFPN(nn.Module):
         out2 = self.conv22(out2)
         out3 = self.conv33(out3)
 
+        if self.ca:
+            out1 = self.ca1(out1)
+            out2 = self.ca2(out2)
+            out3 = self.ca3(out3)
+        
         return tuple([out1, out2, out3])
